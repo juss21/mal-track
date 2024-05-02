@@ -1,3 +1,4 @@
+import re
 import subprocess
 import winreg
 import os
@@ -18,25 +19,38 @@ def remove_startup_entry(malware):
     except Exception as e:
         print(f"Error: {e}")
 
-def identify_attacker_ip():
-    print("In progress")
+def identify_attacker_ip(filename):
+    filepath = file_location(filename)
+    try:
+        with open(filepath, "rb") as f:
+            strings = re.findall(b"([\x20-\x7E]{4,})", f.read())
+            for s in strings:
+                decoded_string =  s.decode("utf-8")
+                match = re.search(r"\b(?:\d{1,3}\.){3}\d{1,3}\b", decoded_string)
+                if match:
+                    print(f"potential attacker IP:{match.group()}")
+    except OSError as e:
+        print(e)
 
-def remove_malware_files(filename):
+def file_location(filename):
     try:
         for root, _, files in os.walk("C:\\"):
             if filename in files:
-                file_path = os.path.join(root, filename)
-                os.remove(file_path)
-                print(f"'{filename}' removed successfully from: {file_path}")
+                return os.path.join(root, filename)
     except Exception as e:
         print(f"Error: {e}")
 
+def remove_malware_files(filename):
+    file_path = file_location(filename)
+    os.remove(file_path)
+    print(f"'{filename}' removed successfully from: {file_path}")
+
 def main():
-    malware = "Mal-Track"
     kill_malware_process("maltrack.exe")
-    remove_startup_entry(malware)
-    remove_malware_files(malware.lower() + ".exe")
-    identify_attacker_ip()
+    remove_startup_entry("Mal-Track")
+    identify_attacker_ip("mal-track.exe")
+    remove_malware_files("maltrack.exe")
+    remove_malware_files("mal-track.exe")
 
 if __name__ == "__main__":
     main()
