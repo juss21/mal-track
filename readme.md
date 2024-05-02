@@ -18,7 +18,7 @@ The goal of this project is to understand the basic operation of a computer viru
     - To manage Windows startup programs, open Settings > Apps > Startup.
 
 - Is the student able to explain clearly how he get the ip of the attacker from the malware?
-    - I open the file, decoding the content and then use regex to filter out all IP addresses used in the program.
+    - I open the file, decode the content and then use regex to filter out all IP addresses used in the program.
 
 - Is the student able to explain clearly how his program works?
     - Sure, It kills the malwares process > removes it from startup > finds IP addresses > searches for and deletes the malware files.
